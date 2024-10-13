@@ -1,3 +1,5 @@
+from time import sleep
+
 from django.apps import AppConfig
 import threading
 
@@ -8,4 +10,5 @@ class MailingAppConfig(AppConfig):
 
     def ready(self):
         from .scheduler import start
-        '''threading.Thread(target=start).start()'''
+        sleep(2)
+        threading.Thread(target=start).start()

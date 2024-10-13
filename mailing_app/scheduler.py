@@ -12,7 +12,7 @@ def start():
     scheduler.add_job(
         send_mailing,
         'interval',
-        minutes=1,
+        minutes=5,
         name='send_mailing',
         jobstore='default',
         replace_existing=True,

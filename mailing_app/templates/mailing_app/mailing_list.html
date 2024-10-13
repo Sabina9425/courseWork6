@@ -7,28 +7,40 @@
 {% if mailings %}
 <table class="table table-bordered">
     <thead class="thead-light">
-        <tr>
-            <th>ID</th>
-            <th>Сообщение</th>
-            <th>Дата и время отправки</th>
-            <th>Статус</th>
-            <th>Действия</th>
-        </tr>
+    <tr>
+        <th>ID</th>
+        <th>Сообщение</th>
+        <th>Дата и время отправки</th>
+        <th>Статус</th>
+        <th>Количество попыток</th>
+        <th>Последняя попытка</th>
+        <th>Действия</th>
+    </tr>
     </thead>
     <tbody>
-        {% for mailing in mailings %}
-        <tr>
-            <td>{{ mailing.id }}</td>
-            <td>{{ mailing.message.subject }}</td>
-            <td>{{ mailing.start_datetime }}</td>
-            <td>{{ mailing.get_status_display }}</td>
-            <td>
-                <a href="{% url 'mailing_app:mailing_detail' mailing.id %}" class="btn btn-info btn-sm">Просмотр</a>
-                <a href="{% url 'mailing_app:mailing_update' mailing.id %}" class="btn btn-warning btn-sm">Редактировать</a>
-                <a href="{% url 'mailing_app:mailing_delete' mailing.id %}" class="btn btn-danger btn-sm">Удалить</a>
-            </td>
-        </tr>
-        {% endfor %}
+    {% for mailing in mailings %}
+    <tr>
+        <td>{{ mailing.id }}</td>
+        <td>{{ mailing.message.subject }}</td>
+        <td>{{ mailing.start_datetime }}</td>
+        <td>{{ mailing.get_status_display }}</td>
+        <td>{{ mailing.mailingattempt_set.count }}</td>
+        <td>
+            {% if mailing.mailingattempt_set.exists %}
+                {% with last_attempt=mailing.mailingattempt_set.latest %}
+                    {{ last_attempt.attempt_datetime|date:"d.m.Y H:i:s" }} ({{ last_attempt.get_status_display }})
+                {% endwith %}
+            {% else %}
+                Нет попыток
+            {% endif %}
+        </td>
+        <td>
+            <a href="{% url 'mailing_app:mailing_detail' mailing.id %}" class="btn btn-info btn-sm">Просмотр</a>
+            <a href="{% url 'mailing_app:mailing_update' mailing.id %}" class="btn btn-warning btn-sm">Редактировать</a>
+            <a href="{% url 'mailing_app:mailing_delete' mailing.id %}" class="btn btn-danger btn-sm">Удалить</a>
+        </td>
+    </tr>
+    {% endfor %}
     </tbody>
 </table>
 {% else %}

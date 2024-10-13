@@ -1,5 +1,5 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Mailing, Message, Client
+from .models import Mailing, Message, Client, MailingAttempt
 from .forms import MailingForm, MessageForm, ClientForm
 from django.urls import reverse_lazy
 
@@ -11,6 +11,11 @@ class MailingListView(ListView):
 
 class MailingDetailView(DetailView):
     model = Mailing
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['attempts'] = MailingAttempt.objects.filter(mailing=self.object).order_by('-attempt_datetime')
+        return context
 
 
 class MailingCreateView(CreateView):

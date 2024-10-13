@@ -36,6 +36,31 @@
     </tr>
 </table>
 
+<h2 class="mt-5">Попытки рассылки</h2>
+
+{% if attempts %}
+    <table class="table table-bordered mt-3">
+        <thead class="thead-light">
+            <tr>
+                <th>Дата и время попытки</th>
+                <th>Статус</th>
+                <th>Ответ сервера</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attempt in attempts %}
+            <tr>
+                <td>{{ attempt.attempt_datetime }}</td>
+                <td>{{ attempt.get_status_display }}</td>
+                <td>{{ attempt.server_response }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Попытки отправки для этой рассылки еще не зарегистрированы.</p>
+{% endif %}
+
 <div class="mt-4">
     <a href="{% url 'mailing_app:mailing_update' mailing.id %}" class="btn btn-warning">Редактировать</a>
     <a href="{% url 'mailing_app:mailing_delete' mailing.id %}" class="btn btn-danger">Удалить</a>

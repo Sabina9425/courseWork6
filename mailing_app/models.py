@@ -20,6 +20,7 @@ class Message(models.Model):
 
 class Mailing(models.Model):
     PERIODICITY_CHOICES = [
+        ('once', 'Один раз'),
         ('daily', 'Раз в день'),
         ('weekly', 'Раз в неделю'),
         ('monthly', 'Раз в месяц'),
@@ -54,3 +55,6 @@ class MailingAttempt(models.Model):
 
     def __str__(self):
         return f"Попытка #{self.id} для рассылки #{self.mailing.id}"
+
+    class Meta:
+        get_latest_by = 'attempt_datetime'
