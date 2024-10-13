@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Детали сообщения</h1>
+
+<table class="table table-striped">
+    <tr>
+        <th>ID</th>
+        <td>{{ message.id }}</td>
+    </tr>
+    <tr>
+        <th>Тема</th>
+        <td>{{ message.subject }}</td>
+    </tr>
+    <tr>
+        <th>Тело сообщения</th>
+        <td>{{ message.body }}</td>
+    </tr>
+</table>
+
+<div class="mt-4">
+    <a href="{% url 'mailing_app:message_update' message.id %}" class="btn btn-warning">Редактировать</a>
+    <a href="{% url 'mailing_app:message_delete' message.id %}" class="btn btn-danger">Удалить</a>
+    <a href="{% url 'mailing_app:message_list' %}" class="btn btn-secondary">Назад к списку</a>
+</div>
+{% endblock %}

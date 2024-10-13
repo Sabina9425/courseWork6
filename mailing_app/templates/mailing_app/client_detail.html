@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Детали клиента</h1>
+
+<table class="table table-striped">
+    <tr>
+        <th>ID</th>
+        <td>{{ client.id }}</td>
+    </tr>
+    <tr>
+        <th>ФИО</th>
+        <td>{{ client.full_name }}</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>{{ client.email }}</td>
+    </tr>
+    <tr>
+        <th>Комментарий</th>
+        <td>{{ client.comment }}</td>
+    </tr>
+</table>
+
+<div class="mt-4">
+    <a href="{% url 'mailing_app:client_update' client.id %}" class="btn btn-warning">Редактировать</a>
+    <a href="{% url 'mailing_app:client_delete' client.id %}" class="btn btn-danger">Удалить</a>
+    <a href="{% url 'mailing_app:client_list' %}" class="btn btn-secondary">Назад к списку</a>
+</div>
+{% endblock %}

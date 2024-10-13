@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">{% if form.instance.pk %}Редактировать{% else %}Добавить{% endif %} клиента</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="id_full_name">ФИО</label>
+        <input type="text" name="full_name" class="form-control" id="id_full_name" value="{{ form.full_name.value|default_if_none:'' }}">
+    </div>
+    <div class="form-group">
+        <label for="id_email">Email</label>
+        <input type="email" name="email" class="form-control" id="id_email" value="{{ form.email.value|default_if_none:'' }}">
+    </div>
+    <div class="form-group">
+        <label for="id_comment">Комментарий</label>
+        <textarea name="comment" class="form-control" id="id_comment">{{ form.comment.value|default_if_none:'' }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a href="{% url 'mailing_app:client_list' %}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

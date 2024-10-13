@@ -8,4 +8,4 @@ class MailingAppConfig(AppConfig):
 
     def ready(self):
         from .scheduler import start
-        threading.Thread(target=start).start()
+        '''threading.Thread(target=start).start()'''

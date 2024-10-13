@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Детали рассылки</h1>
+
+<table class="table table-striped">
+    <tr>
+        <th>ID</th>
+        <td>{{ mailing.id }}</td>
+    </tr>
+    <tr>
+        <th>Дата и время отправки</th>
+        <td>{{ mailing.start_datetime }}</td>
+    </tr>
+    <tr>
+        <th>Периодичность</th>
+        <td>{{ mailing.get_periodicity_display }}</td>
+    </tr>
+    <tr>
+        <th>Статус</th>
+        <td>{{ mailing.get_status_display }}</td>
+    </tr>
+    <tr>
+        <th>Сообщение</th>
+        <td>{{ mailing.message.subject }}</td>
+    </tr>
+    <tr>
+        <th>Клиенты</th>
+        <td>
+            <ul>
+                {% for client in mailing.clients.all %}
+                <li>{{ client.full_name }} ({{ client.email }})</li>
+                {% endfor %}
+            </ul>
+        </td>
+    </tr>
+</table>
+
+<div class="mt-4">
+    <a href="{% url 'mailing_app:mailing_update' mailing.id %}" class="btn btn-warning">Редактировать</a>
+    <a href="{% url 'mailing_app:mailing_delete' mailing.id %}" class="btn btn-danger">Удалить</a>
+    <a href="{% url 'mailing_app:mailing_list' %}" class="btn btn-secondary">Назад к списку</a>
+</div>
+{% endblock %}
