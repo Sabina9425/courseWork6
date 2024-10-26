@@ -4,7 +4,7 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from blog.models import Post
+from blog.services import get_posts_from_cache
 from .models import Mailing, Message, Client, MailingAttempt
 from .forms import MailingForm, MessageForm, ClientForm
 from django.urls import reverse_lazy
@@ -17,7 +17,8 @@ def home(request):
 
     unique_clients = Client.objects.aggregate(count=Count('id', distinct=True))['count']
 
-    random_posts = Post.objects.order_by('?')[:3]
+    all_posts = get_posts_from_cache()
+    random_posts = all_posts.order_by('?')[:3]
 
     context = {
         'total_mailings': total_mailings,
@@ -26,6 +27,7 @@ def home(request):
         'posts': random_posts,
     }
     return render(request, 'home.html', context)
+
 
 class MailingListView(ListView, LoginRequiredMixin):
     model = Mailing
