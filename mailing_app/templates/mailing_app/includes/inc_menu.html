@@ -9,19 +9,26 @@
     <h5 class="my-0 mr-md-auto font-weight-normal">Mailing Administrator</h5>
     <nav class="ms-5">
         {% if user.is_authenticated %}
-       <form action="{% url 'logout' %}" method="post" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" class="p-2 btn btn-outline-primary">Выйти</button>
-        </form>
-        <a class="p-2 btn btn-outline-primary" href="/">Рассылки</a>
+        <a class="p-2 btn btn-outline-primary" href="/">Главная</a>
+        <a class="p-2 btn btn-outline-primary" href="/mailing_list">Рассылки</a>
         <a class="p-2 btn btn-outline-primary" href="/messages/">Сообщения</a>
         <a class="p-2 btn btn-outline-primary" href="/clients/">Клиенты</a>
         {% if perms.accounts.view_customuser %}
             <a class="p-2 btn btn-outline-primary" href="{% url 'accounts' %}">Пользователи</a>
         {% endif %}
-        {% else %}
-        <a class="p-2 btn btn-outline-primary" href="{% url 'login' %}">Вход</a>
-        <a class="p-2 btn btn-outline-primary" href="{% url 'register' %}">Регистрация</a>
         {% endif %}
     </nav>
+
+    <div class="ms-auto">
+        {% if user.is_authenticated %}
+            <span class="me-2">{{ user.username }}</span>
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-primary">Выйти</button>
+            </form>
+        {% else %}
+            <a class="p-2 btn btn-outline-primary" href="{% url 'login' %}">Вход</a>
+            <a class="p-2 btn btn-outline-primary" href="{% url 'register' %}">Регистрация</a>
+        {% endif %}
+    </div>
 </div>

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Главная страница</h1>
+
+        <section class="mb-5">
+            <h2 class="text-primary">Информация о рассылках</h2>
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text">Количество рассылок всего: <strong>{{ total_mailings }}</strong></p>
+                    <p class="card-text">Количество активных рассылок: <strong>{{ active_mailings }}</strong></p>
+                    <p class="card-text">Количество уникальных клиентов: <strong>{{ unique_clients }}</strong></p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-primary">Случайные статьи из блога</h2>
+            <div class="row">
+                {% for post in posts %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            {% if post.image %}
+                                <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ post.title }}</h5>
+                                <p class="card-text">{{ post.content|truncatewords:20 }}</p>
+                            </div>
+                            <div class="card-footer text-muted">
+                                <small>Дата публикации: {{ post.published_at }}</small>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">Нет доступных статей.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+{% endblock %}

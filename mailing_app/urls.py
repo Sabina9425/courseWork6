@@ -4,7 +4,8 @@ from .mailing_utils import disable_mailing, enable_mailing
 from .views import *
 
 urlpatterns = [
-    path('', MailingListView.as_view(), name='mailing_list'),
+    path('', home, name='home'),
+    path('mailing_list', MailingListView.as_view(), name='mailing_list'),
     path('<int:pk>/', MailingDetailView.as_view(), name='mailing_detail'),
     path('create/', MailingCreateView.as_view(), name='mailing_create'),
     path('<int:pk>/update/', MailingUpdateView.as_view(), name='mailing_update'),

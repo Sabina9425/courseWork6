@@ -1,11 +1,31 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.db.models import Count
 from django.http import HttpResponseForbidden
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
+from blog.models import Post
 from .models import Mailing, Message, Client, MailingAttempt
 from .forms import MailingForm, MessageForm, ClientForm
 from django.urls import reverse_lazy
 
+
+def home(request):
+    total_mailings = Mailing.objects.count()
+
+    active_mailings = Mailing.objects.filter(status='active').count()
+
+    unique_clients = Client.objects.aggregate(count=Count('id', distinct=True))['count']
+
+    random_posts = Post.objects.order_by('?')[:3]
+
+    context = {
+        'total_mailings': total_mailings,
+        'active_mailings': active_mailings,
+        'unique_clients': unique_clients,
+        'posts': random_posts,
+    }
+    return render(request, 'home.html', context)
 
 class MailingListView(ListView, LoginRequiredMixin):
     model = Mailing
