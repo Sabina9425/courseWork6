@@ -1,4 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.http import HttpResponseForbidden
+from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Mailing, Message, Client, MailingAttempt
 from .forms import MailingForm, MessageForm, ClientForm
@@ -42,11 +44,23 @@ class MailingUpdateView(PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy('mailing_app:mailing_list')
     permission_required = 'mailing_app.can_edit_mailing'
 
+    def dispatch(self, request, *args, **kwargs):
+        mailing = get_object_or_404(Mailing, pk=self.kwargs['pk'])
+        if mailing.owner != request.user:
+            return HttpResponseForbidden("У вас нет прав на редактирование данной рассылки.")
+        return super().dispatch(request, *args, **kwargs)
+
 
 class MailingDeleteView(PermissionRequiredMixin, DeleteView):
     model = Mailing
     success_url = reverse_lazy('mailing_app:mailing_list')
     permission_required = 'mailing_app.can_edit_mailing'
+
+    def dispatch(self, request, *args, **kwargs):
+        mailing = get_object_or_404(Mailing, pk=self.kwargs['pk'])
+        if mailing.owner != request.user:
+            return HttpResponseForbidden("У вас нет прав на удаление данной рассылки.")
+        return super().dispatch(request, *args, **kwargs)
 
 
 class MessageListView(ListView, LoginRequiredMixin):
@@ -78,11 +92,23 @@ class MessageUpdateView(PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy('mailing_app:message_list')
     permission_required = 'mailing_app.can_edit_message'
 
+    def dispatch(self, request, *args, **kwargs):
+        message = get_object_or_404(Message, pk=self.kwargs['pk'])
+        if message.owner != request.user:
+            return HttpResponseForbidden("У вас нет прав на редактирование данного сообщения.")
+        return super().dispatch(request, *args, **kwargs)
+
 
 class MessageDeleteView(PermissionRequiredMixin, DeleteView):
     model = Message
     success_url = reverse_lazy('mailing_app:message_list')
     permission_required = 'mailing_app.can_edit_message'
+
+    def dispatch(self, request, *args, **kwargs):
+        message = get_object_or_404(Message, pk=self.kwargs['pk'])
+        if message.owner != request.user:
+            return HttpResponseForbidden("У вас нет прав на удаление данного сообщения.")
+        return super().dispatch(request, *args, **kwargs)
 
 
 class ClientListView(ListView, LoginRequiredMixin):
@@ -112,7 +138,19 @@ class ClientUpdateView(UpdateView, LoginRequiredMixin):
     form_class = ClientForm
     success_url = reverse_lazy('mailing_app:client_list')
 
+    def dispatch(self, request, *args, **kwargs):
+        client = get_object_or_404(Client, pk=self.kwargs['pk'])
+        if client.owner != request.user:
+            return HttpResponseForbidden("У вас нет прав на редактирование данного клиента.")
+        return super().dispatch(request, *args, **kwargs)
+
 
 class ClientDeleteView(DeleteView, LoginRequiredMixin):
     model = Client
     success_url = reverse_lazy('mailing_app:client_list')
+
+    def dispatch(self, request, *args, **kwargs):
+        client = get_object_or_404(Client, pk=self.kwargs['pk'])
+        if client.owner != request.user:
+            return HttpResponseForbidden("У вас нет прав на удаление данного клиента.")
+        return super().dispatch(request, *args, **kwargs)
