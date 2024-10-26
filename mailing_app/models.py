@@ -1,10 +1,12 @@
 from django.db import models
+from django.conf import settings
 
 
 class Client(models.Model):
     email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=255)
     comment = models.TextField(blank=True, null=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
         return self.full_name
@@ -13,6 +15,7 @@ class Client(models.Model):
 class Message(models.Model):
     subject = models.CharField(max_length=255)
     body = models.TextField()
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
         return self.subject
@@ -37,6 +40,7 @@ class Mailing(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='created')
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
     clients = models.ManyToManyField(Client)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
         return f"Рассылка #{self.id} - {self.message.subject}"

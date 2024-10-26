@@ -11,4 +11,4 @@ class MailingAppConfig(AppConfig):
     def ready(self):
         from .scheduler import start
         sleep(2)
-        threading.Thread(target=start).start()
+        '''threading.Thread(target=start).start()'''

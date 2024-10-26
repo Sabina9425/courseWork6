@@ -8,7 +8,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 dot_env = os.path.join(BASE_DIR, '.env')
 load_dotenv(dotenv_path=dot_env)
 
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
@@ -16,7 +15,6 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", False) == "True"
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -28,7 +26,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "mailing_app",
-    "django_apscheduler"
+    "django_apscheduler",
+    "accounts"
 ]
 
 MIDDLEWARE = [
@@ -61,7 +60,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -75,7 +73,6 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT")
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -95,7 +92,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = 'Europe/Moscow'
@@ -103,7 +99,6 @@ TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
@@ -124,3 +119,9 @@ EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", False) == "True"
 
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
+LOGIN_REDIRECT_URL = 'mailing_app:mailing_list'
+LOGOUT_REDIRECT_URL = 'login'
