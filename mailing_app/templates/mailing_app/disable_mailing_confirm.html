@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Отключить рассылку</h1>
+<div class="alert alert-danger" role="alert">
+    Вы уверены, что хотите отключить рассылку "{{ mailing }}"?
+</div>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Да, отключить</button>
+    <a href="{% url 'mailing_app:mailing_detail' mailing.id %}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

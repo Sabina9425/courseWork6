@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Mailing, Message, Client, MailingAttempt
 from .forms import MailingForm, MessageForm, ClientForm
@@ -10,7 +10,10 @@ class MailingListView(ListView, LoginRequiredMixin):
     context_object_name = 'mailings'
 
     def get_queryset(self):
-        return Mailing.objects.filter(owner=self.request.user)
+        if self.request.user.has_perm('mailing_app.view_all_mailings'):
+            return Mailing.objects.all()
+        else:
+            return Mailing.objects.filter(owner=self.request.user)
 
 
 class MailingDetailView(DetailView, LoginRequiredMixin):
@@ -22,25 +25,28 @@ class MailingDetailView(DetailView, LoginRequiredMixin):
         return context
 
 
-class MailingCreateView(CreateView, LoginRequiredMixin):
+class MailingCreateView(PermissionRequiredMixin, CreateView):
     model = Mailing
     form_class = MailingForm
     success_url = reverse_lazy('mailing_app:mailing_list')
+    permission_required = 'mailing_app.can_edit_mailing'
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super().form_valid(form)
 
 
-class MailingUpdateView(UpdateView, LoginRequiredMixin):
+class MailingUpdateView(PermissionRequiredMixin, UpdateView):
     model = Mailing
     form_class = MailingForm
     success_url = reverse_lazy('mailing_app:mailing_list')
+    permission_required = 'mailing_app.can_edit_mailing'
 
 
-class MailingDeleteView(DeleteView, LoginRequiredMixin):
+class MailingDeleteView(PermissionRequiredMixin, DeleteView):
     model = Mailing
     success_url = reverse_lazy('mailing_app:mailing_list')
+    permission_required = 'mailing_app.can_edit_mailing'
 
 
 class MessageListView(ListView, LoginRequiredMixin):
@@ -55,25 +61,28 @@ class MessageDetailView(DetailView, LoginRequiredMixin):
     model = Message
 
 
-class MessageCreateView(CreateView, LoginRequiredMixin):
+class MessageCreateView(PermissionRequiredMixin, CreateView):
     model = Message
     form_class = MessageForm
     success_url = reverse_lazy('mailing_app:message_list')
+    permission_required = 'mailing_app.can_edit_message'
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super().form_valid(form)
 
 
-class MessageUpdateView(UpdateView, LoginRequiredMixin):
+class MessageUpdateView(PermissionRequiredMixin, UpdateView):
     model = Message
     form_class = MessageForm
     success_url = reverse_lazy('mailing_app:message_list')
+    permission_required = 'mailing_app.can_edit_message'
 
 
-class MessageDeleteView(DeleteView, LoginRequiredMixin):
+class MessageDeleteView(PermissionRequiredMixin, DeleteView):
     model = Message
     success_url = reverse_lazy('mailing_app:message_list')
+    permission_required = 'mailing_app.can_edit_message'
 
 
 class ClientListView(ListView, LoginRequiredMixin):

@@ -13,12 +13,15 @@
             {% csrf_token %}
             <button type="submit" class="p-2 btn btn-outline-primary">Выйти</button>
         </form>
+        <a class="p-2 btn btn-outline-primary" href="/">Рассылки</a>
+        <a class="p-2 btn btn-outline-primary" href="/messages/">Сообщения</a>
+        <a class="p-2 btn btn-outline-primary" href="/clients/">Клиенты</a>
+        {% if perms.accounts.view_customuser %}
+            <a class="p-2 btn btn-outline-primary" href="{% url 'accounts' %}">Пользователи</a>
+        {% endif %}
         {% else %}
         <a class="p-2 btn btn-outline-primary" href="{% url 'login' %}">Вход</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'register' %}">Регистрация</a>
         {% endif %}
-        <a class="p-2 btn btn-outline-primary" href="/">Рассылки</a>
-        <a class="p-2 btn btn-outline-primary" href="/messages/">Сообщения</a>
-        <a class="p-2 btn btn-outline-primary" href="/clients/">Клиенты</a>
     </nav>
 </div>

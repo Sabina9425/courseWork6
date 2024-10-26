@@ -36,8 +36,17 @@
         </td>
         <td>
             <a href="{% url 'mailing_app:mailing_detail' mailing.id %}" class="btn btn-info btn-sm">Просмотр</a>
+             {% if perms.mailing_app.can_edit_mailing %}
             <a href="{% url 'mailing_app:mailing_update' mailing.id %}" class="btn btn-warning btn-sm">Редактировать</a>
             <a href="{% url 'mailing_app:mailing_delete' mailing.id %}" class="btn btn-danger btn-sm">Удалить</a>
+            {% endif %}
+             {% if perms.mailing_app.can_disable_mailing %}
+                {% if mailing.status != 'disabled' %}
+                    <a href="{% url 'mailing_app:mailing_disable' mailing.id %}" class="btn btn-danger btn-sm">Выключить</a>
+                {% else %}
+                    <a href="{% url 'mailing_app:mailing_enable' mailing.id %}" class="btn btn-danger btn-sm">Возобновить</a>
+                {% endif %}
+            {% endif %}
         </td>
     </tr>
     {% endfor %}

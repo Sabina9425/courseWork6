@@ -62,8 +62,17 @@
 {% endif %}
 
 <div class="mt-4">
+    {% if perms.mailing_app.can_edit_mailing %}
     <a href="{% url 'mailing_app:mailing_update' mailing.id %}" class="btn btn-warning">Редактировать</a>
     <a href="{% url 'mailing_app:mailing_delete' mailing.id %}" class="btn btn-danger">Удалить</a>
+    {% endif %}
+   {% if perms.mailing_app.can_disable_mailing %}
+          {% if mailing.status != 'disabled' %}
+                   <a href="{% url 'mailing_app:mailing_disable' mailing.id %}" class="btn btn-danger btn-sm">Выключить</a>
+            {% else %}
+              <a href="{% url 'mailing_app:mailing_enable' mailing.id %}" class="btn btn-danger btn-sm">Возобновить</a>
+            {% endif %}
+    {% endif %}
     <a href="{% url 'mailing_app:mailing_list' %}" class="btn btn-secondary">Назад к списку</a>
 </div>
 {% endblock %}

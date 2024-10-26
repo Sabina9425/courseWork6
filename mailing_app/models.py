@@ -20,6 +20,11 @@ class Message(models.Model):
     def __str__(self):
         return self.subject
 
+    class Meta:
+        permissions = [
+            ('can_edit_message', "Can Edit Message")
+        ]
+
 
 class Mailing(models.Model):
     PERIODICITY_CHOICES = [
@@ -33,6 +38,7 @@ class Mailing(models.Model):
         ('created', 'Создана'),
         ('started', 'Запущена'),
         ('finished', 'Завершена'),
+        ('disabled', 'Выключена'),
     ]
 
     start_datetime = models.DateTimeField()
@@ -44,6 +50,13 @@ class Mailing(models.Model):
 
     def __str__(self):
         return f"Рассылка #{self.id} - {self.message.subject}"
+
+    class Meta:
+        permissions = [
+            ('can_disable_mailing', "Can Disable Mailing"),
+            ('view_all_mailings', "Can View All Mailings"),
+            ('can_edit_mailing', "Can Edit Mailing"),
+        ]
 
 
 class MailingAttempt(models.Model):

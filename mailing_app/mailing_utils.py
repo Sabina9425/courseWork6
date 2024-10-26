@@ -1,4 +1,7 @@
 import smtplib
+
+from django.contrib.auth.decorators import permission_required
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
@@ -57,3 +60,23 @@ def send_mailing():
             if mailing.periodicity == 'once':
                 mailing.status = 'finished'
                 mailing.save()
+
+
+@permission_required('mailing_app.can_disable_mailing', raise_exception=True)
+def disable_mailing(request, pk):
+    mailing = get_object_or_404(Mailing, id=pk)
+    if request.method == 'POST':
+        mailing.status = 'disabled'
+        mailing.save()
+        return redirect('mailing_app:mailing_list')
+    return render(request, 'mailing_app/disable_mailing_confirm.html', {'mailing': mailing})
+
+
+@permission_required('mailing_app.can_disable_mailing', raise_exception=True)
+def enable_mailing(request, pk):
+    mailing = get_object_or_404(Mailing, id=pk)
+    if request.method == 'POST':
+        mailing.status = 'created'
+        mailing.save()
+        return redirect('mailing_app:mailing_list')
+    return render(request, 'mailing_app/enable_mailing_confirm.html', {'mailing': mailing})

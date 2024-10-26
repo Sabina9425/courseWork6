@@ -20,8 +20,10 @@
             <td>{{ message.subject }}</td>
             <td>
                 <a href="{% url 'mailing_app:message_detail' message.id %}" class="btn btn-info btn-sm">Просмотр</a>
+                {% if perms.mailing_app.can_edit_message %}
                 <a href="{% url 'mailing_app:message_update' message.id %}" class="btn btn-warning btn-sm">Редактировать</a>
                 <a href="{% url 'mailing_app:message_delete' message.id %}" class="btn btn-danger btn-sm">Удалить</a>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

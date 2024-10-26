@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Список пользователей</h1>
+
+{% if accounts %}
+<table class="table table-bordered">
+    <thead class="thead-light">
+        <tr>
+            <th>Имя пользователя</th>
+            <th>Почта</th>
+            <th>Почта верифицирована?</th>
+            <th>Активный</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for account in accounts %}
+        <tr>
+            <td>{{ account.username }}</td>
+            <td>{{ account.email }}</td>
+            <td>{{ account.is_email_verified }}</td>
+            <td>{{ account.is_active }}</td>
+
+            {% if perms.accounts.change_customuser %}
+                {% if account.is_active %}
+                <td>
+                    <a href="{% url 'block_account' account.id %}" class="btn btn-info btn-sm">Заблокировать</a>
+                </td>
+                {% else %}
+                  <td>
+                    <a href="{% url 'unlock_account' account.id %}" class="btn btn-info btn-sm">Разблокировать</a>
+                </td>
+                {% endif %}
+             {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info" role="alert">
+    Нет зарегистрированных пользователей.
+</div>
+{% endif %}
+{% endblock %}
