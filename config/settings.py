@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "mailing_app",
     "django_apscheduler",
-    "accounts"
+    "accounts",
+    "blog"
 ]
 
 MIDDLEWARE = [
@@ -125,3 +126,6 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 LOGIN_REDIRECT_URL = 'mailing_app:mailing_list'
 LOGOUT_REDIRECT_URL = 'login'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
