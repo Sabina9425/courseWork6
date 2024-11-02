@@ -22,6 +22,7 @@
     <div class="ms-auto">
         {% if user.is_authenticated %}
             <span class="me-2">{{ user.email }}</span>
+            <a class="btn btn-primary" href="{% url 'user_detail' user.pk %}" role="button">Мой Профиль</a>
             <form action="{% url 'logout' %}" method="post" style="display:inline;">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-outline-primary">Выйти</button>

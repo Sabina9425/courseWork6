@@ -1,7 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
-from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.views.generic import DetailView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import UserRegistrationForm
 from .models import CustomUser
@@ -12,6 +16,27 @@ from .services import send_verification_email
 def accounts_list(request):
     users = CustomUser.objects.all()
     return render(request, 'accounts/account_list.html', {'accounts': users})
+
+
+class CustomUserDetailView(DetailView, LoginRequiredMixin):
+    model = CustomUser
+
+
+class CustomUserEditView(UpdateView, LoginRequiredMixin):
+    model = CustomUser
+    fields = ("first_name", "last_name")
+    template_name = "accounts/customuser_edit.html"
+
+    def get_success_url(self):
+        return reverse('user_detail', args=[self.kwargs.get('pk')])
+
+    def get_object(self, queryset=None):
+        user = self.request.user
+
+        if user.is_authenticated:
+            return user
+        else:
+            raise PermissionDenied
 
 
 def register_view(request):
